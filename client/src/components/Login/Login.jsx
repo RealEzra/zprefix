@@ -1,7 +1,6 @@
 import { Box, FormControl, FormHelperText, FormLabel, Input, Stack, Link, Text, Button, Flex, InputGroup, InputRightElement, IconButton, useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
-import { useNavigate } from "react-router-dom";
 
 export default function Login() {
     const [loading, setLoading] = useState(false);
@@ -11,7 +10,7 @@ export default function Login() {
     const [result, setResult] = useState({})
     const handleClick = () => setShow(!show)
     const toast = useToast();
-    const navigate = useNavigate();
+
 
     useEffect(() => {
         if(result.error) {
@@ -24,6 +23,8 @@ export default function Login() {
                 duration: 5000 
             })
             setLoading(false)
+        } else {
+            localStorage.setItem('session', result.cookie)
         }
     }, [result])
 
@@ -54,7 +55,7 @@ export default function Login() {
                 body: JSON.stringify(login)
             }).then((response) => {
                 if (response.ok) {
-                  navigate("/profile")
+                  return response.json()
                 }
                 return response.json()
               })

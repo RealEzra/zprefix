@@ -41,7 +41,7 @@ app.use(cors())
 // End Imports/Setup
 
 app.get('/', isAuthenticated, (req, res) => {
-    res.send('Hello World!')
+    res.redirect(`${url}/login`)
 })
 
 app.post('/login', async (req, res) => {
@@ -51,9 +51,9 @@ app.post('/login', async (req, res) => {
         if (bcrypt.compareSync(password, hash)) {
             req.session.user = username;
             res.cookie("sessionId", req.sessionID)
-            knex('users').where({ 'username': username.toLowerCase() }).update({ 'session_id': req.sessionID })
+            knex('users').where({ 'username': username.toLowerCase() }).update({ 'session_id': req.sessionID }).catch((err) => console.log(err));
             // res.redirect(`${url}/profile`)
-            res.status(200).send({msg: "success!"})
+            res.status(200).send({cookie: req.sessionID})
         } else {
             res.status(400).send({ error: "Incorrect Username or Password!" })
         }
