@@ -63,6 +63,26 @@ app.post('/login', async (req, res) => {
     }
 })
 
+app.post('/sign-up', async (req,res) => {
+    const {username, password, firstname, lastname} = req.body;
+    try {
+        const user = await knex('users').select('username').where({'username': username.toLowerCase()}).then(data => data)
+        if (user.length > 0) {
+            res.status(400).send({error: "That username already exists!"})
+        } else {
+            const hash = bcrypt.hashSync(password, 10);
+            knex("users").insert({username: username, first_name: firstname, last_name: lastname, password: hash}).catch(err => console.log(err))
+            res.status(200).send({success: "Account created please login!"})
+        }
+    } catch {
+        res.status(400).send({error: "something went wrong!"})
+    }
+})
+
+app.get('/items/:user', async (req,res) => {
+
+})
+
 
 
 module.exports = app;
