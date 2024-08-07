@@ -27,6 +27,7 @@ export default function Login() {
             setLoading(false)
         } else if (result.cookie) {
             localStorage.setItem('session', result.cookie)
+            localStorage.setItem('user', login.username)
             const session = localStorage.getItem("session")
             if (session) {
                 return navigate("/profile")

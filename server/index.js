@@ -79,7 +79,19 @@ app.post('/sign-up', async (req,res) => {
     }
 })
 
+app.get('/items', async (req, res) => {
+    knex('item').select('*').then(data => res.status(200).send(data))
+})
+
 app.get('/items/:user', async (req,res) => {
+    const user = req.params.user
+    try{
+        const userid = await knex('users').select('id').where({'username': user.toLowerCase()}).then(data => data[0].id)
+        const items = await knex('item').select('*').where({'user_id': userid}).then(data => res.status(200).send(data))
+
+    } catch {
+        res.status(400).send({error: "User not found!"})
+    }
 
 })
 

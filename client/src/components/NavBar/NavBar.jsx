@@ -15,9 +15,10 @@ export default function NavBar() {
                         {session ?
                             <Menu>
                                 <MenuButton>
-                                    <Avatar size="sm" />
+                                    <Avatar name={localStorage.getItem('user')} size="sm" />
                                 </MenuButton>
                                 <MenuList>
+                                <MenuItem onClick={() => navigate("/profile")}>Profile</MenuItem>
                                     <MenuItem onClick={() => {
                                         localStorage.removeItem("session")
                                         return navigate("/login")

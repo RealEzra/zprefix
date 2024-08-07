@@ -7,6 +7,7 @@ exports.seed = async function(knex) {
   // Deletes ALL existing entries
   await knex('users').del()
   await knex('users').insert([
-    {first_name: 'Ezra', last_name: 'Dulaney', username: 'ezra', password: bcrypt.hashSync("password!", 10) }
+    {first_name: 'Ezra', last_name: 'Dulaney', username: 'ezra', password: bcrypt.hashSync("password!", 10)},
+    {first_name: 'John', last_name: 'Smith', username: 'jsmith', password: bcrypt.hashSync("password!", 10)}
   ]);
 };
