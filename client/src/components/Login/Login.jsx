@@ -2,6 +2,7 @@ import { Box, FormControl, FormHelperText, FormLabel, Input, Stack, Link, Text, 
 import { useEffect, useState } from "react";
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 export default function Login() {
     const [loading, setLoading] = useState(false);
@@ -84,6 +85,9 @@ export default function Login() {
 
     return (
         <>
+        <Helmet>
+            <title>Lameazon | Login</title>
+        </Helmet>
             <Box paddingY="2em" margin="0 auto" maxW="25%">
                 <Text marginBottom="1em">
                     Don&apos;t have an account?{' '}

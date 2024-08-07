@@ -21,6 +21,7 @@ export default function NavBar() {
                                 <MenuItem onClick={() => navigate("/profile")}>Profile</MenuItem>
                                     <MenuItem onClick={() => {
                                         localStorage.removeItem("session")
+                                        localStorage.removeItem('user')
                                         return navigate("/login")
                                         }} icon={<RiLogoutBoxRLine/>}>Logout</MenuItem>
                                 </MenuList>

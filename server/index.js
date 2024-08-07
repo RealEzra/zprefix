@@ -74,7 +74,7 @@ app.post('/sign-up', async (req,res) => {
         } else {
             const hash = bcrypt.hashSync(password, 10);
             knex("users").insert({username: username, first_name: firstname, last_name: lastname, password: hash}).catch(err => console.log(err))
-            res.status(200).send({success: "Account created please login!"})
+            res.status(201).send({success: "Account created please login!"})
         }
     } catch {
         res.status(400).send({error: "something went wrong!"})
@@ -87,6 +87,45 @@ app.get('/user/:id', async (req, res) => {
 })
 
 // --ITEMS--
+
+app.post('/item', async (req, res) => {
+    if (req.body.session === null) {
+        res.status(400).send({error: "Session token not found please try logging in again!"})
+    } else {
+        try {
+            const userid = await knex('users').select('id').where({"session_id": req.body.session}).then(data => data[0].id).catch(err => console.log(err))
+            if (!userid) {
+                res.status(400).send({error: "Your session token is invalid please login again!"})
+            } else {
+                knex('item').insert({user_id: userid, item_name: req.body.item_name, description: req.body.description, quantity: req.body.quantity}).catch(err => console.log(err))
+                res.status(201).send({success: "New item has been created"})
+            }
+
+        } catch {
+            res.status(503).send({error: "Server error please try again later!"})
+        }
+    }
+})
+
+app.delete('/item', async (req, res) => {
+    if (req.body.session === null) {
+        res.status(400).send({error: "Session token not found please try logging in again!"})
+    } else {
+        try {
+            const userid = await knex('users').select('id').where({"session_id": req.body.session}).then(data => data[0].id).catch(err => console.log(err))
+            if (!userid) {
+                res.status(400).send({error: "Your session token is invalid please login again!"})
+            } else {
+                knex('item').where({'id': req.body.id}).del().catch(err => console.log(err))
+                res.status(200).send({alert: "Item was successfully deleted!"})
+
+            }
+
+        } catch {
+            res.status(503).send({error: "Server error please try again later!"})
+        }
+    }
+})
 
 app.get('/item/:id', (req, res) => {
     knex('item').select('*').where({'id': req.params.id}).then(data => res.status(200).send(data[0]))
@@ -104,6 +143,28 @@ app.get('/items/:user', async (req,res) => {
 
     } catch {
         res.status(400).send({error: "User not found!"})
+    }
+
+})
+
+// --AUTH--
+
+app.post('/isvalid', async (req, res) => {
+    if (req.body.session === null) {
+        res.status(400).send({invalid: "Session token not found please try logging in!"})
+    } else {
+        try {
+            const userid = await knex('users').select('id').where({"session_id": req.body.session}).then(data => data[0].id).catch(err => console.log(err))
+            if (!userid) {
+                res.status(400).send({invalid: "Your session token is invalid please login again!"})
+            } else {
+                res.status(200).send({success: "Session token is valid! ;)"})
+
+            }
+
+        } catch {
+            res.status(503).send({error: "Ping request to server failed!"})
+        }
     }
 
 })
