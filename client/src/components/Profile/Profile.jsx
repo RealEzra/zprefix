@@ -30,6 +30,7 @@ import {
 import { useEffect, useState, useRef } from "react";
 import { Helmet } from "react-helmet";
 import { useNavigate } from 'react-router-dom';
+import CheckAuth from "../../hooks/useAuth/useAuth";
 
 export default function Profile() {
     const [items, setItems] = useState([]);
@@ -42,7 +43,7 @@ export default function Profile() {
     const [newItem, setNewItem] = useState({ item_name: "", description: "", quantity: 0, session: localStorage.getItem('session') })
     const [result, setResult] = useState({});
     const [invalid, setInvalid] = useState(false);
-
+    const [edit, setEdit]= useState({});
 
 
     useEffect(() => {
@@ -101,7 +102,7 @@ export default function Profile() {
         fetch("http://localhost:3000/item", {
             method: "DELETE",
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({id: item_id, session: localStorage.getItem('session')})
+            body: JSON.stringify({ id: item_id, session: localStorage.getItem('session') })
         }).then((response) => {
             if (response.ok) {
                 return response.json()
@@ -158,6 +159,19 @@ export default function Profile() {
         }
     }
 
+    const editItem = (id) => {
+        setEdit(items[id])
+    }
+    const updateItem = () => {
+
+    }
+
+    if (!localStorage.getItem('session') || !localStorage.getItem('user')) {
+        return (
+            <CheckAuth />
+        )
+    }
+
     return (
         <>
             <Helmet>
@@ -171,7 +185,7 @@ export default function Profile() {
             >
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>Create your account</ModalHeader>
+                    <ModalHeader>Add new item</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody pb={6}>
                         <FormControl isRequired={true} onChange={handleChange} isInvalid={invalid && newItem.item_name.length < 5}>
@@ -191,7 +205,7 @@ export default function Profile() {
                     </ModalBody>
 
                     <ModalFooter>
-                        <Button colorScheme='blue' mr={3} onClick={handleNewItem}>
+                        <Button colorScheme='blue' mr={3} onClick={Object.keys(edit).legnth > 1 ? updateItem : handleNewItem}>
                             Save
                         </Button>
                         <Button onClick={onClose}>Cancel</Button>
@@ -223,7 +237,7 @@ export default function Profile() {
                                     <Td>
                                         <ButtonGroup>
                                             <IconButton isRound={true} onClick={() => navigate(`/item/${item.id}`)} icon={<ViewIcon />} />
-                                            <IconButton isRound={true} icon={<EditIcon />} />
+                                            <IconButton isRound={true} onClick={() => editItem(item.id)} icon={<EditIcon />} />
                                             <IconButton isRound={true} icon={<DeleteIcon />} onClick={() => deleteItem(item.id)} />
                                         </ButtonGroup>
                                     </Td>
