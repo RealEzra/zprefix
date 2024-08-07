@@ -44,6 +44,8 @@ app.get('/', isAuthenticated, (req, res) => {
     res.redirect(`${url}/login`)
 })
 
+// --LOGIN/SIGNUP--
+
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
     try {
@@ -79,7 +81,18 @@ app.post('/sign-up', async (req,res) => {
     }
 })
 
-app.get('/items', async (req, res) => {
+// --USERS--
+app.get('/user/:id', async (req, res) => {
+    knex('users').select('username').where({'id': req.params.id}).then(data => res.status(200).send(data[0]))
+})
+
+// --ITEMS--
+
+app.get('/item/:id', (req, res) => {
+    knex('item').select('*').where({'id': req.params.id}).then(data => res.status(200).send(data[0]))
+})
+
+app.get('/items', (req, res) => {
     knex('item').select('*').then(data => res.status(200).send(data))
 })
 
