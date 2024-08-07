@@ -43,7 +43,6 @@ export default function Profile() {
     const [newItem, setNewItem] = useState({ item_name: "", description: "", quantity: 0, session: localStorage.getItem('session') })
     const [result, setResult] = useState({});
     const [invalid, setInvalid] = useState(false);
-    const [edit, setEdit]= useState({});
 
 
     useEffect(() => {
@@ -159,12 +158,6 @@ export default function Profile() {
         }
     }
 
-    const editItem = (id) => {
-        setEdit(items[id])
-    }
-    const updateItem = () => {
-
-    }
 
     if (!localStorage.getItem('session') || !localStorage.getItem('user')) {
         return (
@@ -205,7 +198,7 @@ export default function Profile() {
                     </ModalBody>
 
                     <ModalFooter>
-                        <Button colorScheme='blue' mr={3} onClick={Object.keys(edit).legnth > 1 ? updateItem : handleNewItem}>
+                        <Button colorScheme='blue' mr={3} onClick={handleNewItem}>
                             Save
                         </Button>
                         <Button onClick={onClose}>Cancel</Button>
@@ -237,7 +230,7 @@ export default function Profile() {
                                     <Td>
                                         <ButtonGroup>
                                             <IconButton isRound={true} onClick={() => navigate(`/item/${item.id}`)} icon={<ViewIcon />} />
-                                            <IconButton isRound={true} onClick={() => editItem(item.id)} icon={<EditIcon />} />
+                                            <IconButton isRound={true} icon={<EditIcon />} />
                                             <IconButton isRound={true} icon={<DeleteIcon />} onClick={() => deleteItem(item.id)} />
                                         </ButtonGroup>
                                     </Td>
