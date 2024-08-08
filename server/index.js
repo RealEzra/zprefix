@@ -84,7 +84,7 @@ app.post('/sign-up', async (req,res) => {
 
 // --USERS--
 app.get('/user/:id', async (req, res) => {
-    knex('users').select('*').where({'id': req.params.id}).then(data => res.status(200).send(data[0]))
+    knex('users').select('username').select('first_name').where({'id': req.params.id}).then(data => res.status(200).send(data[0]))
 })
 
 // --ITEMS--
