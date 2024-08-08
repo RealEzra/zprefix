@@ -1,7 +1,8 @@
-import { Flex, Heading, Divider, Button, ButtonGroup, Avatar, Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
+import { Flex, Heading, Divider, Button, ButtonGroup, Avatar, Menu, MenuButton, MenuList, MenuItem, IconButton } from "@chakra-ui/react";
 import ToggleTheme from "../ThemeToggle/ThemeToggle";
 import { Link, useNavigate } from "react-router-dom";
 import { RiLogoutBoxRLine } from "react-icons/ri";
+import { TiHome } from "react-icons/ti";
 
 export default function NavBar() {
     const navigate = useNavigate();
@@ -13,6 +14,7 @@ export default function NavBar() {
                 <Flex>
                     <ButtonGroup>
                         {session ?
+                        <>
                             <Menu>
                                 <MenuButton>
                                     <Avatar name={localStorage.getItem('user')} size="sm" />
@@ -27,6 +29,8 @@ export default function NavBar() {
                                         }} icon={<RiLogoutBoxRLine/>}>Logout</MenuItem>
                                 </MenuList>
                             </Menu>
+                            <IconButton onClick={() => navigate('/') }isRound={true} icon={<TiHome/>}/>
+                        </>
                             : <Button onClick={() => navigate("/login")}>Login</Button>}
                         <ToggleTheme />
                     </ButtonGroup>

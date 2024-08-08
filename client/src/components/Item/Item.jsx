@@ -1,9 +1,11 @@
-import { Box, Heading, Skeleton, Stack, Text } from "@chakra-ui/react";
+import { ArrowBackIcon } from "@chakra-ui/icons";
+import { Box, Center, Heading, Button, Skeleton, Stack, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 
 export default function Item() {
+    const navigate = useNavigate();
     const param = useParams();
     const [item, setItem] = useState({});
     const [user, setUser] = useState({});
@@ -34,6 +36,9 @@ export default function Item() {
             <Helmet>
                 <title>{item.item_name} Details</title>
             </Helmet>
+            <Center>
+                <Button marginY="1em" leftIcon={<ArrowBackIcon />} onClick={() => navigate(-1)}>Go Back</Button>
+            </Center>
             <Box boxShadow='md' borderWidth='1px' borderRadius='lg' marginY="1em" paddingY="5em" maxW="50%" margin="0 auto" textAlign="center">
                 <Stack spacing="1em">
                     <Heading>{item.item_name}</Heading>
