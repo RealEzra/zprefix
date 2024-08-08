@@ -39,7 +39,7 @@ export default function Item() {
             <Center>
                 <Button marginY="1em" leftIcon={<ArrowBackIcon />} onClick={() => navigate(-1)}>Go Back</Button>
             </Center>
-            <Box boxShadow='md' borderWidth='1px' borderRadius='lg' marginY="1em" paddingY="5em" maxW="50%" margin="0 auto" textAlign="center">
+            <Box boxShadow='lg' borderWidth='1px' borderRadius='lg' marginY="1em" paddingY="5em" maxW="50%" margin="0 auto" textAlign="center">
                 <Stack spacing="1em">
                     <Heading>{item.item_name}</Heading>
                     <Text>Description: {item.description}</Text>

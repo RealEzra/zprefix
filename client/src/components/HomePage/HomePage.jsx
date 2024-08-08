@@ -26,7 +26,7 @@ export default function HomePage() {
         <SimpleGrid minChildWidth='120px' spacing='40px' marginX="1em">
         {items.map(item => {
             return (
-                <Box boxShadow='md' textAlign="center" borderWidth='1px' borderRadius='lg' overflow='hidden' key={item.id} onClick={() => handleClick(item.id)}>
+                <Box boxShadow='lg' textAlign="center" borderWidth='1px' borderRadius='lg' overflow='hidden' key={item.id} onClick={() => handleClick(item.id)}>
                     <Heading>{item.item_name}</Heading>
                     <Text>{item.description.length < 100 ? item.description: item.description.substring(0,100)+"..."}</Text>
                     <Text>Quantity: {item.quantity}</Text>

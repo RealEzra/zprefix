@@ -14,23 +14,23 @@ export default function NavBar() {
                 <Flex>
                     <ButtonGroup>
                         {session ?
-                        <>
-                            <Menu>
-                                <MenuButton>
-                                    <Avatar name={localStorage.getItem('user')} size="sm" />
-                                </MenuButton>
-                                <MenuList>
-                                <MenuItem onClick={() => navigate("/profile")}>Profile</MenuItem>
-                                    <MenuItem onClick={() => {
-                                        localStorage.removeItem("session")
-                                        localStorage.removeItem('user')
-                                        localStorage.removeItem('name')
-                                        return navigate("/login")
-                                        }} icon={<RiLogoutBoxRLine/>}>Logout</MenuItem>
-                                </MenuList>
-                            </Menu>
-                            <IconButton onClick={() => navigate('/') }isRound={true} icon={<TiHome/>}/>
-                        </>
+                            <>
+                                <Menu>
+                                    <MenuButton>
+                                        <Avatar name={localStorage.getItem('user')} size="sm" />
+                                    </MenuButton>
+                                    <MenuList>
+                                        <MenuItem onClick={() => navigate("/profile")}>Profile</MenuItem>
+                                        <MenuItem onClick={() => {
+                                            localStorage.removeItem("session")
+                                            localStorage.removeItem('user')
+                                            localStorage.removeItem('name')
+                                            return navigate("/login")
+                                        }} icon={<RiLogoutBoxRLine />}>Logout</MenuItem>
+                                    </MenuList>
+                                </Menu>
+                                <IconButton onClick={() => navigate('/')} isRound={true} icon={<TiHome />} />
+                            </>
                             : <Button onClick={() => navigate("/login")}>Login</Button>}
                         <ToggleTheme />
                     </ButtonGroup>
