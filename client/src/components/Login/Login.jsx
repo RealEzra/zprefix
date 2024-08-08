@@ -29,11 +29,13 @@ export default function Login() {
         } else if (result.cookie) {
             localStorage.setItem('session', result.cookie)
             localStorage.setItem('user', login.username)
+            localStorage.setItem('name', result.user)
             const session = localStorage.getItem("session")
             if (session) {
                 return navigate("/profile")
             }
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [result])
 
     const handleLogin = () => {

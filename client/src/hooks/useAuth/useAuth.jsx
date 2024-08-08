@@ -28,6 +28,7 @@ export default function CheckAuth() {
                     duration: 5000
                 })
             });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     useEffect(() => {
@@ -53,5 +54,6 @@ export default function CheckAuth() {
                 duration: 5000
             })
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [result])
 }

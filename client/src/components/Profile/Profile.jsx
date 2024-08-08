@@ -1,4 +1,4 @@
-import { DeleteIcon, EditIcon, ViewIcon } from "@chakra-ui/icons";
+import { CheckIcon, CloseIcon, DeleteIcon, EditIcon, ViewIcon } from "@chakra-ui/icons";
 import {
     Heading,
     Table,
@@ -43,6 +43,9 @@ export default function Profile() {
     const [newItem, setNewItem] = useState({ item_name: "", description: "", quantity: 0, session: localStorage.getItem('session') })
     const [result, setResult] = useState({});
     const [invalid, setInvalid] = useState(false);
+    const [editing, setEditing] = useState({})
+    const [saving, setSaving] = useState(false);
+    const [editedItem, setEditedItem] = useState({item_name: "", description: "", quantity: 0, session: localStorage.getItem('session')});
 
 
     useEffect(() => {
@@ -74,7 +77,17 @@ export default function Profile() {
                 isClosable: true,
                 duration: 5000
             })
+        } else if (result.info) {
+            toast({
+                title: "Item Updated!",
+                description: result.info,
+                position: "bottom-right",
+                status: "info",
+                isClosable: true,
+                duration: 5000
+            })
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [result])
 
     useEffect(() => {
@@ -84,7 +97,6 @@ export default function Profile() {
                 setItems(json)
                 // setUserId(json[0].user_id)
             });
-
     }, [result])
 
     const handleChange = (e) => {
@@ -158,6 +170,62 @@ export default function Profile() {
         }
     }
 
+    const handleEdit = (id) => {
+        let obj = items.find(o => o.id === id);
+        setEditing(obj)
+        setEditedItem(obj)
+    }
+
+    const handleEdits = (e) => {
+        if(e.target.id === "name") {
+            setEditedItem({...editedItem, item_name: e.target.value })
+        } else if (e.target.id === "description") {
+            setEditedItem({...editedItem, description: e.target.value})
+        } else if (e.target.id === "quantity") {
+            setEditedItem({...editedItem, quantity: e.target.value})
+        }
+    }
+
+    const submitEdits = () => {
+        let obj = items.find(o => o.id === editedItem.id);
+        if (editedItem === obj) {
+            toast({
+                title: "Alert",
+                description: "No changes were made!",
+                position: "bottom-right",
+                status: "info",
+                isClosable: true,
+                duration: 5000
+            })
+        } else {
+            setSaving(true)
+            fetch("http://localhost:3000/item", {
+                method: "PATCH",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({...editedItem, session: localStorage.getItem('session')})
+            }).then((response) => {
+                if (response.ok) {
+                    setSaving(false)
+                    setEditing({})
+                    return response.json()
+                }
+                return response.json()
+            })
+                .then((json) => setResult(json))
+                .catch(() => {
+                    setEditing(false)
+                    toast({
+                        title: "Error",
+                        description: "Something went wrong please try again later!",
+                        position: "bottom-right",
+                        status: "error",
+                        isClosable: true,
+                        duration: 5000
+                    })
+                });
+        }
+    }
+
 
     if (!localStorage.getItem('session') || !localStorage.getItem('user')) {
         return (
@@ -168,7 +236,7 @@ export default function Profile() {
     return (
         <>
             <Helmet>
-                <title>{localStorage.getItem('user') + '\'s Profile'}</title>
+                <title>{localStorage.getItem('name') + '\'s Profile'}</title>
             </Helmet>
             <Modal
                 initialFocusRef={initialRef}
@@ -199,13 +267,13 @@ export default function Profile() {
 
                     <ModalFooter>
                         <Button colorScheme='blue' mr={3} onClick={handleNewItem}>
-                            Save
+                            Add
                         </Button>
                         <Button onClick={onClose}>Cancel</Button>
                     </ModalFooter>
                 </ModalContent>
             </Modal>
-            <Heading paddingY="1em" textAlign="center">{localStorage.getItem('user')}&apos;s Inventory</Heading>
+            <Heading paddingY="1em" textAlign="center">{localStorage.getItem('name')}&apos;s Inventory</Heading>
             <Center>
                 <Button onClick={onOpen}>Add New Item</Button>
             </Center>
@@ -224,16 +292,23 @@ export default function Profile() {
                         {items.map(item => {
                             return (
                                 <Tr key={item.id}>
-                                    <Td>{item.item_name}</Td>
-                                    <Td>{item.description.length < 100 ? item.description : item.description.substring(0, 100) + "..."}</Td>
-                                    <Td>{item.quantity}</Td>
+                                    {editing.id === item.id ? <Td><Input id="name" onChange={handleEdits} defaultValue={item.item_name}/></Td> : <Td>{item.item_name}</Td>}
+                                    {editing.id === item.id ? <Td><Textarea id="description" onChange={handleEdits} defaultValue={item.description}/></Td> : <Td>{item.description.length < 100 ? item.description : item.description.substring(0, 100) + "..."}</Td> }
+                                    {editing.id === item.id ? <Td><Input id="quantity" onChange={handleEdits} type="number" defaultValue={item.quantity}/></Td> : <Td>{item.quantity}</Td>}
+                                    {editing.id === item.id ? 
                                     <Td>
                                         <ButtonGroup>
-                                            <IconButton isRound={true} onClick={() => navigate(`/item/${item.id}`)} icon={<ViewIcon />} />
-                                            <IconButton isRound={true} icon={<EditIcon />} />
-                                            <IconButton isRound={true} icon={<DeleteIcon />} onClick={() => deleteItem(item.id)} />
+                                            <IconButton isRound={true} icon={<CloseIcon/>} onClick={() => setEditing({})}/>
+                                            <IconButton isLoading={saving} isRound={true} onClick={submitEdits} icon={<CheckIcon/>}/>
                                         </ButtonGroup>
                                     </Td>
+                                    : <Td>
+                                        <ButtonGroup>
+                                            <IconButton isRound={true} onClick={() => navigate(`/item/${item.id}`)} icon={<ViewIcon />} />
+                                            <IconButton isRound={true} onClick={() => handleEdit(item.id)} icon={<EditIcon />} />
+                                            <IconButton isRound={true} icon={<DeleteIcon />} onClick={() => deleteItem(item.id)} />
+                                        </ButtonGroup>
+                                    </Td>}
                                 </Tr>
                             )
                         })}

@@ -38,7 +38,7 @@ if(Object.keys(item).length < 1) {
             <Heading>{item.item_name}</Heading>
             <Text>Description: {item.description}</Text>
             <Text>Quantity: {item.quantity}</Text>
-            <Text>Posted by: {user.username}</Text>
+            <Text>Posted by: {user.first_name} ({user.username})</Text>
         </Box>
         </>
     )

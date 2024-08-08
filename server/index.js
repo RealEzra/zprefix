@@ -55,7 +55,8 @@ app.post('/login', async (req, res) => {
             res.cookie("sessionId", req.sessionID)
             knex('users').where({ 'username': username.toLowerCase() }).update({ 'session_id': req.sessionID }).catch((err) => console.log(err));
             // res.redirect(`${url}/profile`)
-            res.status(200).send({cookie: req.sessionID})
+            const firstName = await knex('users').select('first_name').where({'username': username.toLowerCase()}).then(data => data[0].first_name)
+            res.status(200).send({cookie: req.sessionID, user: firstName })
         } else {
             res.status(400).send({ error: "Incorrect Username or Password!" })
         }
@@ -83,7 +84,7 @@ app.post('/sign-up', async (req,res) => {
 
 // --USERS--
 app.get('/user/:id', async (req, res) => {
-    knex('users').select('username').where({'id': req.params.id}).then(data => res.status(200).send(data[0]))
+    knex('users').select('*').where({'id': req.params.id}).then(data => res.status(200).send(data[0]))
 })
 
 // --ITEMS--
@@ -145,6 +146,30 @@ app.get('/items/:user', async (req,res) => {
         res.status(400).send({error: "User not found!"})
     }
 
+})
+
+app.patch('/item', async (req, res) => {
+    if (req.body.session === null) {
+        res.status(400).send({error: "Session token not found please try logging in again!"})
+    } else {
+        try {
+            const userid = await knex('users').select('id').where({"session_id": req.body.session}).then(data => data[0].id).catch(err => console.log(err))
+            if (!userid) {
+                res.status(400).send({error: "Your session token is invalid please login again!"})
+            } else {
+                knex('item').where({'id': req.body.id}).update({
+                    item_name: req.body.item_name,
+                    description: req.body.description,
+                    quantity: req.body.quantity
+                }).catch(err => console.log(err))
+                res.status(200).send({info: "Item was successfully updated!"})
+
+            }
+
+        } catch {
+            res.status(503).send({error: "Server error please try again later!"})
+        }
+    }
 })
 
 // --AUTH--

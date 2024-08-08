@@ -40,6 +40,7 @@ export default function SignUp() {
                 return navigate("/login")
             }
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [result])
 
     const handleLogin = () => {
