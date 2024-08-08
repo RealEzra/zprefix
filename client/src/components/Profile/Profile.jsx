@@ -43,9 +43,9 @@ export default function Profile() {
     const [newItem, setNewItem] = useState({ item_name: "", description: "", quantity: 0, session: localStorage.getItem('session') })
     const [result, setResult] = useState({});
     const [invalid, setInvalid] = useState(false);
-    const [editing, setEditing] = useState({})
+    const [editing, setEditing] = useState({});
     const [saving, setSaving] = useState(false);
-    const [editedItem, setEditedItem] = useState({item_name: "", description: "", quantity: 0, session: localStorage.getItem('session')});
+    const [editedItem, setEditedItem] = useState({ item_name: "", description: "", quantity: 0, session: localStorage.getItem('session') });
 
 
     useEffect(() => {
@@ -87,7 +87,7 @@ export default function Profile() {
                 duration: 5000
             })
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [result])
 
     useEffect(() => {
@@ -177,12 +177,12 @@ export default function Profile() {
     }
 
     const handleEdits = (e) => {
-        if(e.target.id === "name") {
-            setEditedItem({...editedItem, item_name: e.target.value })
+        if (e.target.id === "name") {
+            setEditedItem({ ...editedItem, item_name: e.target.value })
         } else if (e.target.id === "description") {
-            setEditedItem({...editedItem, description: e.target.value})
+            setEditedItem({ ...editedItem, description: e.target.value })
         } else if (e.target.id === "quantity") {
-            setEditedItem({...editedItem, quantity: e.target.value})
+            setEditedItem({ ...editedItem, quantity: e.target.value })
         }
     }
 
@@ -202,7 +202,7 @@ export default function Profile() {
             fetch("http://localhost:3000/item", {
                 method: "PATCH",
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({...editedItem, session: localStorage.getItem('session')})
+                body: JSON.stringify({ ...editedItem, session: localStorage.getItem('session') })
             }).then((response) => {
                 if (response.ok) {
                     setSaving(false)
@@ -292,23 +292,23 @@ export default function Profile() {
                         {items.map(item => {
                             return (
                                 <Tr key={item.id}>
-                                    {editing.id === item.id ? <Td><Input id="name" onChange={handleEdits} defaultValue={item.item_name}/></Td> : <Td>{item.item_name}</Td>}
-                                    {editing.id === item.id ? <Td><Textarea id="description" onChange={handleEdits} defaultValue={item.description}/></Td> : <Td>{item.description.length < 100 ? item.description : item.description.substring(0, 100) + "..."}</Td> }
-                                    {editing.id === item.id ? <Td><Input id="quantity" onChange={handleEdits} type="number" defaultValue={item.quantity}/></Td> : <Td>{item.quantity}</Td>}
-                                    {editing.id === item.id ? 
-                                    <Td>
-                                        <ButtonGroup>
-                                            <IconButton isRound={true} icon={<CloseIcon/>} onClick={() => setEditing({})}/>
-                                            <IconButton isLoading={saving} isRound={true} onClick={submitEdits} icon={<CheckIcon/>}/>
-                                        </ButtonGroup>
-                                    </Td>
-                                    : <Td>
-                                        <ButtonGroup>
-                                            <IconButton isRound={true} onClick={() => navigate(`/item/${item.id}`)} icon={<ViewIcon />} />
-                                            <IconButton isRound={true} onClick={() => handleEdit(item.id)} icon={<EditIcon />} />
-                                            <IconButton isRound={true} icon={<DeleteIcon />} onClick={() => deleteItem(item.id)} />
-                                        </ButtonGroup>
-                                    </Td>}
+                                    {editing.id === item.id ? <Td><Input id="name" onChange={handleEdits} defaultValue={item.item_name} /></Td> : <Td>{item.item_name}</Td>}
+                                    {editing.id === item.id ? <Td><Textarea id="description" onChange={handleEdits} defaultValue={item.description} /></Td> : <Td>{item.description.length < 100 ? item.description : item.description.substring(0, 100) + "..."}</Td>}
+                                    {editing.id === item.id ? <Td><Input id="quantity" onChange={handleEdits} type="number" defaultValue={item.quantity} /></Td> : <Td>{item.quantity}</Td>}
+                                    {editing.id === item.id ?
+                                        <Td>
+                                            <ButtonGroup>
+                                                <IconButton isRound={true} icon={<CloseIcon />} onClick={() => setEditing({})} />
+                                                <IconButton isLoading={saving} isRound={true} onClick={submitEdits} icon={<CheckIcon />} />
+                                            </ButtonGroup>
+                                        </Td>
+                                        : <Td>
+                                            <ButtonGroup>
+                                                <IconButton isRound={true} onClick={() => navigate(`/item/${item.id}`)} icon={<ViewIcon />} />
+                                                <IconButton isRound={true} onClick={() => handleEdit(item.id)} icon={<EditIcon />} />
+                                                <IconButton isRound={true} icon={<DeleteIcon />} onClick={() => deleteItem(item.id)} />
+                                            </ButtonGroup>
+                                        </Td>}
                                 </Tr>
                             )
                         })}
