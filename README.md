@@ -1,4 +1,5 @@
 # Setup
+### Database
 
     docker pull postgres
     
@@ -13,6 +14,24 @@
     
     CREATE DATABASE inventory;
 
+
+### Backend
+
+    cd server
+
+    npm i
+
+Edit env and rename to .env before continuing
+
     npx knex migrate:latest
     
     npx knex seed:run
+
+    nodemon server.js
+
+### Frontend
+    cd client
+
+    npm i
+
+    npm run dev

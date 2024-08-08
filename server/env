@@ -1,0 +1,3 @@
+DB_CONNECTION=postgres://postgres:docker@localhost/inventory
+SECRET="ArandomStringOfHardToGuessText"
+FRONT_ENDPOINT="http://localhost:5173"
